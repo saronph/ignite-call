@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
 } from '@ignite-ui/react';
+import { useRouter } from 'next/router';
 import { ArrowRight } from 'phosphor-react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -87,7 +88,9 @@ export default function TimeIntervals() {
     },
   });
 
-  const weekDays = getWeekDays();
+  const router = useRouter();
+
+  const weekDays = getWeekDays({ short: false });
 
   const { fields } = useFieldArray({
     name: 'intervals',
@@ -102,6 +105,8 @@ export default function TimeIntervals() {
     await api.post('/users/time-intervals', {
       intervals,
     });
+
+    await router.push('/register/update-profile');
   }
 
   return (
@@ -116,7 +121,7 @@ export default function TimeIntervals() {
         <MultiStep size={4} currentStep={3}></MultiStep>
       </Header>
 
-      <IntervalBox as='form' onClick={handleSubmit(handleSetTimeIntervals)}>
+      <IntervalBox as='form' onSubmit={handleSubmit(handleSetTimeIntervals)}>
         <IntervalContainer>
           {fields.map((field, index) => {
             return (
